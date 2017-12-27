@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/colorPrimary"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.androidproject.chatapp.StartActivity">
+
+    <ImageView
+        android:id="@+id/message_icon"
+        android:scaleX="3"
+        android:scaleY="3"
+        android:layout_marginTop="170dp"
+        android:src="@mipmap/ic_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/create_new_account_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="300dp"
+        android:background="@color/colorPrimaryDark"
+        android:padding="10dp"
+        android:text="@string/create_a_new_account"
+        android:textColor="@color/common_google_signin_btn_text_dark_default"
+        android:textSize="20sp" />
+
+    <Button
+        android:id="@+id/start_log_in_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="360dp"
+        android:padding="10dp"
+        android:text="@string/log_in"
+        android:textColor="@color/colorAccent"
+        android:color="@color/common_google_signin_btn_text_dark_default"
+        android:textSize="20sp" />
+</RelativeLayout>
