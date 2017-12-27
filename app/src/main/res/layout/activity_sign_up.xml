@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     tools:context="com.androidproject.chatapp.SignUpActivity">
 
-    <include layout="@layout/app_bar_layout"
+    <include
+        layout="@layout/app_bar_layout"
         android:id="@+id/sign_up_toolbar">
 
     </include>
