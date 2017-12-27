@@ -40,7 +40,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         mToolbar = (Toolbar) findViewById(R.id.sign_up_toolbar);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle("Android Chat App");
+        getSupportActionBar().setTitle("ChatApp");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         progressDialog = new ProgressDialog(this);
@@ -81,7 +81,7 @@ public class SignUpActivity extends AppCompatActivity {
             Toast.makeText(getBaseContext(), "Please enter a password", Toast.LENGTH_LONG).show();
         } else {
             progressDialog.setTitle("Logging in");
-            progressDialog.setMessage("Please wa while we log you in");
+            progressDialog.setMessage("Please wait while we log you in");
             progressDialog.show();
 
             mAuth.createUserWithEmailAndPassword(signUpEmail, signUpPassword)

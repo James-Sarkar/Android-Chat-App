@@ -1,12 +1,15 @@
 package com.androidproject.chatapp;
 
 import android.content.Intent;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.androidproject.chatapp.Adapter.TabsPagerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -16,6 +19,12 @@ public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
 
+    ViewPager viewPager;
+
+    TabLayout tabLayout;
+
+    TabsPagerAdapter tabsPagerAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,9 +32,18 @@ public class MainActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
+        // Toolbar
         mToolbar = (Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("ChatApp");
+
+        // Tabs
+        viewPager = (ViewPager) findViewById(R.id.main_tabs_pager);
+        tabsPagerAdapter = new TabsPagerAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(tabsPagerAdapter);
+
+        tabLayout = (TabLayout) findViewById(R.id.main_tabs);
+        tabLayout.setupWithViewPager(viewPager);
     }
 
     @Override
