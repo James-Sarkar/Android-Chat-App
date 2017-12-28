@@ -1,22 +1,37 @@
 package com.androidproject.chatapp;
 
+import android.content.Intent;
+import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class SettingsActivity extends AppCompatActivity {
+
+    private static final int GALLERY_PICK = 1;
+
+    private static final String IMAGE_EXTENSION = ".jpg";
 
     Toolbar mToolbar;
 
@@ -29,6 +44,8 @@ public class SettingsActivity extends AppCompatActivity {
     DatabaseReference databaseReference;
 
     FirebaseAuth mAuth;
+
+    StorageReference storageReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +63,8 @@ public class SettingsActivity extends AppCompatActivity {
 
         settingsUserDisplayName = (TextView) findViewById(R.id.settings_user_display_name);
         settingsUserBio = (TextView) findViewById(R.id.settings_user_bio);
+
+        storageReference = FirebaseStorage.getInstance().getReference().child("Profile_Images");
 
         databaseReference = FirebaseDatabase.getInstance().getReference()
                 .child("Users")
@@ -67,7 +86,10 @@ public class SettingsActivity extends AppCompatActivity {
         changeUserPictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/*");
+                startActivityForResult(intent, GALLERY_PICK);
             }
         });
 
@@ -78,5 +100,41 @@ public class SettingsActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == GALLERY_PICK && resultCode == RESULT_OK && data != null) {
+            Uri imageUri = data.getData();
+            // start picker to get image for cropping and then use the image in cropping activity
+            CropImage.activity(imageUri)
+                    .setGuidelines(CropImageView.Guidelines.ON)
+                    .setAspectRatio(1, 1)
+                    .start(this);
+        }
+
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                Uri resultUri = result.getUri();
+
+                StorageReference path = storageReference.child(mAuth.getCurrentUser().getUid() + IMAGE_EXTENSION);
+                path.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(getBaseContext(), "Image saved", Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(getBaseContext(), "Error occurred while saving your image: " + task.getException(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+            }
+        }
     }
 }
