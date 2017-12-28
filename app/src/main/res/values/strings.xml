@@ -12,5 +12,8 @@
     <string name="settings">Settings</string>
     <string name="change_your_bio">Change Your Bio</string>
     <string name="change_your_picture">Change Your Picture</string>
+    <string name="change_bio_here">Change bio here</string>
+    <string name="save">Save</string>
+    <string name="discard">Discard</string>
 
 </resources>

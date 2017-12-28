@@ -78,7 +78,7 @@ public class LogInActivity extends AppCompatActivity {
                             startActivity(intent);
                             finish();
                         } else {
-                            Toast.makeText(getBaseContext(), "Couldn't log you in: " + task.getException(),Toast.LENGTH_LONG).show();
+                            Toast.makeText(getBaseContext(), "Error: " + task.getException(),Toast.LENGTH_LONG).show();
                         }
 
                         progressDialog.dismiss();

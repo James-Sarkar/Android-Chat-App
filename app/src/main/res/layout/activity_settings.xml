@@ -27,12 +27,12 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/setting_user_picture"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:layout_marginBottom="8dp"
         android:layout_marginStart="25dp"
         android:layout_marginEnd="25dp"
-        android:textColor="@color/common_google_signin_btn_text_dark_default"
-        android:textSize="24sp" />
+        android:textColor="@color/colorPrimary"
+        android:textSize="24sp"/>
 
     <TextView
         android:id="@+id/settings_user_bio"
@@ -48,10 +48,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.5"
         android:layout_marginStart="25dp"
         android:layout_marginEnd="25dp"
-        android:layout_marginTop="400dp"
+        android:layout_marginTop="455dp"
         android:orientation="vertical">
 
         <Button
@@ -71,10 +70,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:background="@color/common_google_signin_btn_text_light_default"
+            android:background="@android:color/background_light"
             android:text="@string/change_your_bio"
             android:textAlignment="center"
-            android:textColor="@color/common_google_signin_btn_text_dark_default"
+            android:textColor="@color/common_google_signin_btn_text_dark_focused"
             android:textSize="18sp"
             android:textStyle="bold" />
 

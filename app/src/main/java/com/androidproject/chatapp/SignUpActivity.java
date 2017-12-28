@@ -82,6 +82,8 @@ public class SignUpActivity extends AppCompatActivity {
             Toast.makeText(getBaseContext(), "Please provide a valid email address", Toast.LENGTH_LONG).show();
         } else if (TextUtils.isEmpty(signUpPassword)) {
             Toast.makeText(getBaseContext(), "Please enter a password", Toast.LENGTH_LONG).show();
+        } else if (signUpDisplayName.length() > 30) {
+            Toast.makeText(getBaseContext(), "Your display name cannot be more than 30 characters long.", Toast.LENGTH_LONG).show();
         } else {
             progressDialog.setTitle("Creating account");
             progressDialog.setMessage("Please wait while we create your account");
@@ -112,7 +114,7 @@ public class SignUpActivity extends AppCompatActivity {
                                     }
                                 });
                     } else {
-                        Toast.makeText(getBaseContext(), "Failed to create an account: " + task.getException(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getBaseContext(), "Error: " + task.getException(), Toast.LENGTH_LONG).show();
                     }
 
                     progressDialog.dismiss();

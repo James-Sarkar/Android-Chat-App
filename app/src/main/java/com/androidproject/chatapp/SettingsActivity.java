@@ -1,5 +1,6 @@
 package com.androidproject.chatapp;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -22,6 +23,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -47,6 +49,8 @@ public class SettingsActivity extends AppCompatActivity {
 
     StorageReference storageReference;
 
+    ProgressDialog progressDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +60,8 @@ public class SettingsActivity extends AppCompatActivity {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("Settings");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        progressDialog = new ProgressDialog(this);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -74,6 +80,10 @@ public class SettingsActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 settingsUserDisplayName.setText(dataSnapshot.child("User_Display_Name").getValue().toString());
                 settingsUserBio.setText(dataSnapshot.child("User_Profile_Bio").getValue().toString());
+
+                if (!dataSnapshot.child("User_Image").getValue().toString().equals("default_profile")) {
+                    Picasso.with(getBaseContext()).load(dataSnapshot.child("User_Image").getValue().toString()).into(settingsUserPicture);
+                }
             }
 
             @Override
@@ -97,7 +107,9 @@ public class SettingsActivity extends AppCompatActivity {
         changeUserBioButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(SettingsActivity.this, UserBioActivity.class);
+                intent.putExtra("user_old_bio", settingsUserBio.getText().toString());
+                startActivity(intent);
             }
         });
     }
@@ -125,15 +137,30 @@ public class SettingsActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                         if (task.isSuccessful()) {
-                            Toast.makeText(getBaseContext(), "Image saved", Toast.LENGTH_LONG).show();
+                            progressDialog.setTitle("Updating Profile Picture");
+                            progressDialog.setMessage("Please wait while we update your profile picture");
+                            progressDialog.show();
+
+                            String downloadedUrl = task.getResult().getDownloadUrl().toString();
+
+                            databaseReference.child("User_Image").setValue(downloadedUrl)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            progressDialog.dismiss();
+
+                                            Toast.makeText(getBaseContext(), "Profile picture updated", Toast.LENGTH_LONG).show();
+                                        }
+                                    });
                         } else {
-                            Toast.makeText(getBaseContext(), "Error occurred while saving your image: " + task.getException(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(getBaseContext(), "Error: " + task.getException(), Toast.LENGTH_LONG).show();
                         }
                     }
                 });
 
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
+                //TODO
             }
         }
     }
