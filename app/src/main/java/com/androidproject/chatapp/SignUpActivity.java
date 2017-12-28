@@ -40,7 +40,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         mToolbar = (Toolbar) findViewById(R.id.sign_up_toolbar);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle("ChatApp");
+        getSupportActionBar().setTitle("Sign Up");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         progressDialog = new ProgressDialog(this);
@@ -67,7 +67,6 @@ public class SignUpActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(SignUpActivity.this, StartActivity.class);
                 startActivity(intent);
-                finish();
             }
         });
     }

@@ -85,7 +85,8 @@
                 android:text="@string/cancel"
                 android:textAlignment="center"
                 android:textColor="@color/common_google_signin_btn_text_dark_default"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
         </LinearLayout>
 

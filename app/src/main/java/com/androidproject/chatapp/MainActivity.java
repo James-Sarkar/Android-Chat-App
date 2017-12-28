@@ -12,12 +12,13 @@ import android.view.MenuItem;
 import com.androidproject.chatapp.Adapter.TabsPagerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
 
 public class MainActivity extends AppCompatActivity {
 
-    Toolbar mToolbar;
-
     private FirebaseAuth mAuth;
+
+    Toolbar mToolbar;
 
     ViewPager viewPager;
 
@@ -75,6 +76,9 @@ public class MainActivity extends AppCompatActivity {
             mAuth.signOut();
 
             logOutUser();
+        } else if (item.getItemId() == R.id.settings_button_main) {
+            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+            startActivity(intent);
         }
 
         return true;
@@ -85,6 +89,5 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(MainActivity.this, StartActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
-        finish();
     }
 }

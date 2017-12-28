@@ -40,7 +40,7 @@ public class LogInActivity extends AppCompatActivity {
 
         mToolbar = (Toolbar) findViewById(R.id.log_in_toolbar);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle("Android Chat App");
+        getSupportActionBar().setTitle("Log In");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         logInEmail = (EditText) findViewById(R.id.email);
