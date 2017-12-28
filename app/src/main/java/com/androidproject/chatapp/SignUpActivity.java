@@ -80,8 +80,8 @@ public class SignUpActivity extends AppCompatActivity {
         } else if (TextUtils.isEmpty(signUpPassword)) {
             Toast.makeText(getBaseContext(), "Please enter a password", Toast.LENGTH_LONG).show();
         } else {
-            progressDialog.setTitle("Logging in");
-            progressDialog.setMessage("Please wait while we log you in");
+            progressDialog.setTitle("Creating account");
+            progressDialog.setMessage("Please wait while we create your account");
             progressDialog.show();
 
             mAuth.createUserWithEmailAndPassword(signUpEmail, signUpPassword)
@@ -96,6 +96,7 @@ public class SignUpActivity extends AppCompatActivity {
                     } else {
                         Toast.makeText(getBaseContext(), "Failed to create an account: " + task.getException(), Toast.LENGTH_LONG).show();
                     }
+
                     progressDialog.dismiss();
                 }
             });
