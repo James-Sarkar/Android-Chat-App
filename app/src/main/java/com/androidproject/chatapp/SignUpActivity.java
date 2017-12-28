@@ -16,6 +16,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.w3c.dom.Text;
 
@@ -28,6 +30,8 @@ public class SignUpActivity extends AppCompatActivity {
     Toolbar mToolbar;
 
     private FirebaseAuth mAuth;
+
+    private DatabaseReference databaseReference;
 
     ProgressDialog progressDialog;
 
@@ -71,7 +75,7 @@ public class SignUpActivity extends AppCompatActivity {
         });
     }
 
-    private void createAccount(String signUpDisplayName, String signUpEmail, String signUpPassword) {
+    private void createAccount(final String signUpDisplayName, String signUpEmail, String signUpPassword) {
         if (TextUtils.isEmpty(signUpDisplayName)) {
             Toast.makeText(getBaseContext(), "Please enter a display name", Toast.LENGTH_LONG).show();
         } else if (TextUtils.isEmpty(signUpEmail)) {
@@ -88,10 +92,25 @@ public class SignUpActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
-                        Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
-                        finish();
+                        databaseReference = FirebaseDatabase.getInstance().getReference()
+                                                .child("Users")
+                                                .child(mAuth.getCurrentUser().getUid());
+
+                        databaseReference.child("User_Display_Name").setValue(signUpDisplayName);
+                        databaseReference.child("User_Profile_Bio").setValue("Hi there.");
+                        databaseReference.child("User_Image").setValue("default_profile");
+                        databaseReference.child("User_Thumbnail").setValue("default_image")
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+                                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                            startActivity(intent);
+                                            finish();
+                                        }
+                                    }
+                                });
                     } else {
                         Toast.makeText(getBaseContext(), "Failed to create an account: " + task.getException(), Toast.LENGTH_LONG).show();
                     }
