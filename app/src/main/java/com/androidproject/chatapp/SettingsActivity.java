@@ -2,6 +2,7 @@ package com.androidproject.chatapp;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -27,7 +28,14 @@ import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 import de.hdodenhof.circleimageview.CircleImageView;
+import id.zelory.compressor.Compressor;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -47,9 +55,11 @@ public class SettingsActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
 
-    private StorageReference storageReference;
+    private StorageReference profileImagesReference, thumbnailImagesReference;
 
     private ProgressDialog progressDialog;
+
+    private Bitmap thumbnailBitmap = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +80,9 @@ public class SettingsActivity extends AppCompatActivity {
         settingsUserDisplayName = (TextView) findViewById(R.id.settings_user_display_name);
         settingsUserBio = (TextView) findViewById(R.id.settings_user_bio);
 
-        storageReference = FirebaseStorage.getInstance().getReference().child("profileImages");
+        profileImagesReference = FirebaseStorage.getInstance().getReference().child("profileImages");
+
+        thumbnailImagesReference = FirebaseStorage.getInstance().getReference().child("thumbnailImages");
 
         databaseReference = FirebaseDatabase.getInstance().getReference()
                 .child("Users")
@@ -82,7 +94,10 @@ public class SettingsActivity extends AppCompatActivity {
                 settingsUserBio.setText(dataSnapshot.child("userProfileBio").getValue().toString());
 
                 if (!dataSnapshot.child("userProfileImage").getValue().toString().equals("default_profile")) {
-                    Picasso.with(getBaseContext()).load(dataSnapshot.child("userProfileImage").getValue().toString()).into(settingsUserPicture);
+                    Picasso.with(getBaseContext())
+                            .load(dataSnapshot.child("userProfileImage").getValue().toString())
+                            .placeholder(R.drawable.default_profile)
+                            .into(settingsUserPicture);
                 }
             }
 
@@ -130,37 +145,72 @@ public class SettingsActivity extends AppCompatActivity {
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
+                progressDialog.setTitle("Updating Profile Picture");
+                progressDialog.setMessage("Please wait while we update your profile picture");
+                progressDialog.show();
+
                 Uri resultUri = result.getUri();
 
-                StorageReference path = storageReference.child(mAuth.getCurrentUser().getUid() + IMAGE_EXTENSION);
-                path.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                final File thumbnailPath = new File(resultUri.getPath());
+
+                try {
+                    thumbnailBitmap = new Compressor(this)
+                            .setMaxWidth(200)
+                            .setMaxHeight(200)
+                            .setQuality(50)
+                            .compressToBitmap(thumbnailPath);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
+                thumbnailBitmap.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStream);
+
+                final byte[] THUMBNAIL_BYTES = byteArrayOutputStream.toByteArray();
+
+                final StorageReference THUMBNAIL_IMAGE_PATH = thumbnailImagesReference.child(mAuth.getCurrentUser().getUid() + IMAGE_EXTENSION);
+
+                StorageReference profileImagePath = profileImagesReference.child(mAuth.getCurrentUser().getUid() + IMAGE_EXTENSION);
+                profileImagePath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                    public void onComplete(@NonNull final Task<UploadTask.TaskSnapshot> task) {
                         if (task.isSuccessful()) {
-                            progressDialog.setTitle("Updating Profile Picture");
-                            progressDialog.setMessage("Please wait while we update your profile picture");
-                            progressDialog.show();
+                            final String DOWNLOADED_URL = task.getResult().getDownloadUrl().toString();
 
-                            String downloadedUrl = task.getResult().getDownloadUrl().toString();
+                            UploadTask uploadTask = THUMBNAIL_IMAGE_PATH.putBytes(THUMBNAIL_BYTES);
+                            uploadTask.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> thumbnailTask) {
+                                    String downloadedThumbnailUrl = thumbnailTask.getResult().getDownloadUrl().toString();
 
-                            databaseReference.child("userProfileImage").setValue(downloadedUrl)
-                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            progressDialog.dismiss();
+                                    if (task.isSuccessful()) {
+                                        Map updateUserData = new HashMap<>();
+                                        updateUserData.put("userProfileImage", DOWNLOADED_URL);
+                                        updateUserData.put("userThumbnail", downloadedThumbnailUrl);
 
-                                            Toast.makeText(getBaseContext(), "Profile picture updated", Toast.LENGTH_LONG).show();
-                                        }
-                                    });
+
+                                        databaseReference.updateChildren(updateUserData)
+                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    progressDialog.dismiss();
+
+                                                    Toast.makeText(getBaseContext(), "Profile picture updated", Toast.LENGTH_LONG).show();
+                                                }
+                                            });
+                                    }
+                                }
+                            });
                         } else {
+                            progressDialog.dismiss();
+
                             Toast.makeText(getBaseContext(), "Error: " + task.getException(), Toast.LENGTH_LONG).show();
                         }
                     }
                 });
-
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
-                //TODO
             }
         }
     }
