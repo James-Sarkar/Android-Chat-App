@@ -25,26 +25,20 @@
             android:parentActivityName=".StartActivity" />
         <activity
             android:name=".LogInActivity"
-            android:parentActivityName=".StartActivity">
-
-        </activity>
+            android:parentActivityName=".StartActivity"></activity>
         <activity
             android:name=".SettingsActivity"
-            android:parentActivityName=".MainActivity">
-
-        </activity>
+            android:parentActivityName=".MainActivity"></activity>
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
         <activity
             android:name=".UserBioActivity"
-            android:parentActivityName=".SettingsActivity">
-
-        </activity>
-        <activity android:name=".AllUsersActivity"
-            android:parentActivityName=".MainActivity">
-
-        </activity>
+            android:parentActivityName=".SettingsActivity"></activity>
+        <activity
+            android:name=".AllUsersActivity"
+            android:parentActivityName=".MainActivity"></activity>
+        <activity android:name=".ProfileActivity"></activity>
     </application>
 
 </manifest>

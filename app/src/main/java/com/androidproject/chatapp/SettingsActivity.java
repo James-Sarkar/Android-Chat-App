@@ -93,12 +93,10 @@ public class SettingsActivity extends AppCompatActivity {
                 settingsUserDisplayName.setText(dataSnapshot.child("userDisplayName").getValue().toString());
                 settingsUserBio.setText(dataSnapshot.child("userProfileBio").getValue().toString());
 
-                if (!dataSnapshot.child("userProfileImage").getValue().toString().equals("default_profile")) {
-                    Picasso.with(getBaseContext())
-                            .load(dataSnapshot.child("userProfileImage").getValue().toString())
-                            .placeholder(R.drawable.default_profile)
-                            .into(settingsUserPicture);
-                }
+                Picasso.with(getBaseContext())
+                        .load(dataSnapshot.child("userProfileImage").getValue().toString())
+                        .placeholder(R.drawable.default_profile)
+                        .into(settingsUserPicture);
             }
 
             @Override

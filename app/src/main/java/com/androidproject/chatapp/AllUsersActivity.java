@@ -1,6 +1,8 @@
 package com.androidproject.chatapp;
 
 import android.content.Context;
+import android.content.Intent;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -51,10 +53,19 @@ public class AllUsersActivity extends AppCompatActivity {
                 = new FirebaseRecyclerAdapter<AllUsers, AllUsersViewHolder>
                 (AllUsers.class, R.layout.all_users_display_layout, AllUsersViewHolder.class, databaseReference) {
             @Override
-            protected void populateViewHolder(AllUsersViewHolder viewHolder, AllUsers model, int position) {
+            protected void populateViewHolder(AllUsersViewHolder viewHolder, AllUsers model, final int position) {
                 viewHolder.setUserDisplayName(model.getUserDisplayName());
                 viewHolder.setUserProfileBio(model.getUserProfileBio());
                 viewHolder.setUserThumbnail(getApplicationContext(), model.getUserThumbnail());
+
+                viewHolder.view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(AllUsersActivity.this, ProfileActivity.class);
+                        intent.putExtra("userId", getRef(position).getKey());
+                        startActivity(intent);
+                    }
+                });
             }
         };
 
@@ -82,9 +93,12 @@ public class AllUsersActivity extends AppCompatActivity {
         }
 
         private void setUserThumbnail(Context context, String userThumbnail) {
-            CircleImageView userThumnailImage = (CircleImageView) view.findViewById(R.id.all_users_profile_picture);
+            CircleImageView userThumbnailImage = (CircleImageView) view.findViewById(R.id.all_users_profile_picture);
 
-            Picasso.with(context).load(userThumbnail).into(userThumnailImage);
+            Picasso.with(context)
+                    .load(userThumbnail)
+                    .placeholder(R.drawable.default_profile)
+                    .into(userThumbnailImage);
         }
     }
 }
