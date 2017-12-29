@@ -22,17 +22,17 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class UserBioActivity extends AppCompatActivity {
 
-    Toolbar mToolbar;
+    private Toolbar mToolbar;
 
-    EditText userBio;
+    private EditText userBio;
 
-    Button saveButton, discardButton;
+    private Button saveButton, discardButton;
 
-    DatabaseReference databaseReference;
+    private DatabaseReference databaseReference;
 
-    FirebaseAuth mAuth;
+    private FirebaseAuth mAuth;
 
-    ProgressDialog progressDialog;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

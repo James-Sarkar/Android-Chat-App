@@ -2,6 +2,7 @@ package com.androidproject.chatapp;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,22 +19,26 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import org.w3c.dom.Text;
 
 public class SignUpActivity extends AppCompatActivity {
 
-    EditText mSignUpDisplayName, mSignUpEmail, mSignUpPassword;
+    private EditText mSignUpDisplayName, mSignUpEmail, mSignUpPassword;
 
-    Button signUpButton, cancelButton;
+    private Button signUpButton, cancelButton;
 
-    Toolbar mToolbar;
+    private Toolbar mToolbar;
 
     private FirebaseAuth mAuth;
 
     private DatabaseReference databaseReference;
 
-    ProgressDialog progressDialog;
+    private ProgressDialog progressDialog;
+
+    private StorageReference storageReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,10 +103,13 @@ public class SignUpActivity extends AppCompatActivity {
                                                 .child("Users")
                                                 .child(mAuth.getCurrentUser().getUid());
 
-                        databaseReference.child("User_Display_Name").setValue(signUpDisplayName);
-                        databaseReference.child("User_Profile_Bio").setValue("Hi there.");
-                        databaseReference.child("User_Image").setValue("default_profile");
-                        databaseReference.child("User_Thumbnail").setValue("default_image")
+                        storageReference = FirebaseStorage.getInstance().getReference()
+                                                .child("profileImages");
+
+                        databaseReference.child("userDisplayName").setValue(signUpDisplayName);
+                        databaseReference.child("userProfileBio").setValue("Hi there.");
+                        databaseReference.child("userProfileImage").setValue("default_profile");
+                        databaseReference.child("userThumbnail").setValue("default_image")
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {

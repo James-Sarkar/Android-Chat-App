@@ -19,15 +19,15 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class LogInActivity extends AppCompatActivity {
 
-    EditText logInEmail, logInPassword;
+    private EditText logInEmail, logInPassword;
 
-    Button logInButton;
+    private Button logInButton;
 
-    Toolbar mToolbar;
+    private Toolbar mToolbar;
 
     private FirebaseAuth mAuth;
 
-    ProgressDialog progressDialog;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -1,4 +1,4 @@
-package com.androidproject.chatapp;
+package com.androidproject.chatapp.Fragment;
 
 
 import android.os.Bundle;
@@ -7,14 +7,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.androidproject.chatapp.R;
+
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FriendsFragment extends Fragment {
+public class ConversationsFragment extends Fragment {
 
 
-    public FriendsFragment() {
+    public ConversationsFragment() {
         // Required empty public constructor
     }
 
@@ -23,7 +25,7 @@ public class FriendsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_friends, container, false);
+        return inflater.inflate(R.layout.fragment_conversations, container, false);
     }
 
 }

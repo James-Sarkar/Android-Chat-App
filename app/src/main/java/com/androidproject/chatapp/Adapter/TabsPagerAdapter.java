@@ -4,9 +4,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.androidproject.chatapp.ConversationsFragment;
-import com.androidproject.chatapp.FriendsFragment;
-import com.androidproject.chatapp.RequestsFragment;
+import com.androidproject.chatapp.Fragment.ConversationsFragment;
+import com.androidproject.chatapp.Fragment.FriendsFragment;
+import com.androidproject.chatapp.Fragment.RequestsFragment;
 
 /**
  * Created by James Sarkar.

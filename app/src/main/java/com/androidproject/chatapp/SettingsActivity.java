@@ -35,21 +35,21 @@ public class SettingsActivity extends AppCompatActivity {
 
     private static final String IMAGE_EXTENSION = ".jpg";
 
-    Toolbar mToolbar;
+    private Toolbar mToolbar;
 
-    CircleImageView settingsUserPicture;
+    private CircleImageView settingsUserPicture;
 
-    TextView settingsUserDisplayName, settingsUserBio;
+    private TextView settingsUserDisplayName, settingsUserBio;
 
-    Button changeUserPictureButton, changeUserBioButton;
+    private Button changeUserPictureButton, changeUserBioButton;
 
-    DatabaseReference databaseReference;
+    private DatabaseReference databaseReference;
 
-    FirebaseAuth mAuth;
+    private FirebaseAuth mAuth;
 
-    StorageReference storageReference;
+    private StorageReference storageReference;
 
-    ProgressDialog progressDialog;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +70,7 @@ public class SettingsActivity extends AppCompatActivity {
         settingsUserDisplayName = (TextView) findViewById(R.id.settings_user_display_name);
         settingsUserBio = (TextView) findViewById(R.id.settings_user_bio);
 
-        storageReference = FirebaseStorage.getInstance().getReference().child("Profile_Images");
+        storageReference = FirebaseStorage.getInstance().getReference().child("profileImages");
 
         databaseReference = FirebaseDatabase.getInstance().getReference()
                 .child("Users")
@@ -78,11 +78,11 @@ public class SettingsActivity extends AppCompatActivity {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                settingsUserDisplayName.setText(dataSnapshot.child("User_Display_Name").getValue().toString());
-                settingsUserBio.setText(dataSnapshot.child("User_Profile_Bio").getValue().toString());
+                settingsUserDisplayName.setText(dataSnapshot.child("userDisplayName").getValue().toString());
+                settingsUserBio.setText(dataSnapshot.child("userProfileBio").getValue().toString());
 
-                if (!dataSnapshot.child("User_Image").getValue().toString().equals("default_profile")) {
-                    Picasso.with(getBaseContext()).load(dataSnapshot.child("User_Image").getValue().toString()).into(settingsUserPicture);
+                if (!dataSnapshot.child("userProfileImage").getValue().toString().equals("default_profile")) {
+                    Picasso.with(getBaseContext()).load(dataSnapshot.child("userProfileImage").getValue().toString()).into(settingsUserPicture);
                 }
             }
 
@@ -143,7 +143,7 @@ public class SettingsActivity extends AppCompatActivity {
 
                             String downloadedUrl = task.getResult().getDownloadUrl().toString();
 
-                            databaseReference.child("User_Image").setValue(downloadedUrl)
+                            databaseReference.child("userProfileImage").setValue(downloadedUrl)
                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {

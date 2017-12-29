@@ -18,13 +18,13 @@ public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
 
-    Toolbar mToolbar;
+    private Toolbar mToolbar;
 
-    ViewPager viewPager;
+    private ViewPager viewPager;
 
-    TabLayout tabLayout;
+    private TabLayout tabLayout;
 
-    TabsPagerAdapter tabsPagerAdapter;
+    private TabsPagerAdapter tabsPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +78,9 @@ public class MainActivity extends AppCompatActivity {
             logOutUser();
         } else if (item.getItemId() == R.id.settings_button_main) {
             Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+            startActivity(intent);
+        } else if (item.getItemId() == R.id.all_users_button_main) {
+            Intent intent = new Intent(MainActivity.this, AllUsersActivity.class);
             startActivity(intent);
         }
 
