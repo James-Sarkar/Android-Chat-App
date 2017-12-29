@@ -38,8 +38,6 @@ public class SignUpActivity extends AppCompatActivity {
 
     private ProgressDialog progressDialog;
 
-    private StorageReference storageReference;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,9 +100,6 @@ public class SignUpActivity extends AppCompatActivity {
                         databaseReference = FirebaseDatabase.getInstance().getReference()
                                                 .child("Users")
                                                 .child(mAuth.getCurrentUser().getUid());
-
-                        storageReference = FirebaseStorage.getInstance().getReference()
-                                                .child("profileImages");
 
                         databaseReference.child("userDisplayName").setValue(signUpDisplayName);
                         databaseReference.child("userProfileBio").setValue("Hi there.");

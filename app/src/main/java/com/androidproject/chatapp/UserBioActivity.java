@@ -88,7 +88,7 @@ public class UserBioActivity extends AppCompatActivity {
             progressDialog.setMessage("Please wait while we update your bio.");
             progressDialog.show();
 
-            databaseReference.child("User_Profile_Bio").setValue(newBio)
+            databaseReference.child("userProfileBio").setValue(newBio)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
