@@ -1,5 +1,6 @@
 package com.androidproject.chatapp;
 
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -7,6 +8,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -20,7 +24,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     private Toolbar mToolbar;
 
-    private DatabaseReference databaseReference;
+    private DatabaseReference usersReference, friendRequestsReference;
 
     private Button sendFriendRequestButton, declineFriendRequestButton;
 
@@ -28,12 +32,25 @@ public class ProfileActivity extends AppCompatActivity {
 
     private CircleImageView profilePicture;
 
+    private String currentState;
+
+    private FirebaseAuth mAuth;
+
+    private String receiverUserId, senderUserId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        databaseReference = FirebaseDatabase.getInstance().getReference().child("Users");
+        mAuth = FirebaseAuth.getInstance();
+
+        senderUserId = mAuth.getCurrentUser().getUid();
+
+        currentState = "notFriends";
+
+        usersReference = FirebaseDatabase.getInstance().getReference().child("Users");
+        friendRequestsReference = FirebaseDatabase.getInstance().getReference().child("Friend_Requests");
 
         sendFriendRequestButton = (Button) findViewById(R.id.send_friend_request_button);
         declineFriendRequestButton = (Button) findViewById(R.id.decline_friend_request_button);
@@ -43,7 +60,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         profilePicture = (CircleImageView) findViewById(R.id.profile_user_picture);
 
-        String userId = getIntent().getExtras().get("userId").toString();
+        receiverUserId = getIntent().getExtras().get("userId").toString();
 
         mToolbar = (Toolbar) findViewById(R.id.user_profile_toolbar);
         setSupportActionBar(mToolbar);
@@ -55,7 +72,7 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-        databaseReference.child(userId)
+        usersReference.child(receiverUserId)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -68,11 +85,72 @@ public class ProfileActivity extends AppCompatActivity {
                                 .into(profilePicture);
 
                         getSupportActionBar().setTitle(dataSnapshot.child("userDisplayName").getValue().toString());
+
+                        friendRequestsReference.child(senderUserId)
+                                .addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        if (dataSnapshot.hasChild(receiverUserId)) {
+                                            String reqType = dataSnapshot.child(receiverUserId).child("requestType").getValue().toString();
+
+                                            if (reqType.equals("sent")) {
+                                                currentState = "requestSent";
+                                                sendFriendRequestButton.setText("CANCEL FRIEND REQUEST");
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
                     }
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
 
+                    }
+                });
+
+        sendFriendRequestButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendFriendRequestButton.setEnabled(false);
+
+                if (currentState.equals("notFriends")) {
+                    sendFriendRequest();
+                }
+            }
+        });
+    }
+
+    private void sendFriendRequest() {
+        friendRequestsReference
+                .child(senderUserId)
+                .child(receiverUserId)
+                .child("requestType")
+                .setValue("sent")
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            friendRequestsReference
+                                    .child(receiverUserId)
+                                    .child(senderUserId)
+                                    .child("requestType")
+                                    .setValue("received")
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                sendFriendRequestButton.setEnabled(true);
+                                                currentState = "requestSent";
+                                                sendFriendRequestButton.setText("CANCEL FRIEND REQUEST");
+                                            }
+                                        }
+                                    });
+                        }
                     }
                 });
     }
