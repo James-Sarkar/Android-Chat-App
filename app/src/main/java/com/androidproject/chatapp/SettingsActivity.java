@@ -24,6 +24,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
@@ -89,14 +91,29 @@ public class SettingsActivity extends AppCompatActivity {
                 .child(mAuth.getCurrentUser().getUid());
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(final DataSnapshot dataSnapshot) {
                 settingsUserDisplayName.setText(dataSnapshot.child("userDisplayName").getValue().toString());
                 settingsUserBio.setText(dataSnapshot.child("userProfileBio").getValue().toString());
 
                 Picasso.with(getBaseContext())
                         .load(dataSnapshot.child("userProfileImage").getValue().toString())
+                        .networkPolicy(NetworkPolicy.OFFLINE)
                         .placeholder(R.drawable.default_profile)
-                        .into(settingsUserPicture);
+                        .into(settingsUserPicture, new Callback() {
+                            @Override
+                            public void onSuccess() {
+
+                            }
+
+                            @Override
+                            public void onError() {
+                                Picasso.with(getBaseContext())
+                                        .load(dataSnapshot.child("userProfileImage").getValue().toString())
+                                        .placeholder(R.drawable.default_profile)
+                                        .into(settingsUserPicture);
+                            }
+                        });
+
             }
 
             @Override
@@ -104,6 +121,7 @@ public class SettingsActivity extends AppCompatActivity {
 
             }
         });
+        databaseReference.keepSynced(true);
 
         changeUserPictureButton = (Button) findViewById(R.id.change_picture_button);
         changeUserPictureButton.setOnClickListener(new View.OnClickListener() {

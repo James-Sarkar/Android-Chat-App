@@ -51,6 +51,7 @@ public class UserBioActivity extends AppCompatActivity {
         databaseReference = FirebaseDatabase.getInstance().getReference()
                                 .child("Users")
                                 .child(mAuth.getCurrentUser().getUid());
+        databaseReference.keepSynced(true);
 
         userBio = (EditText) findViewById(R.id.user_bio);
         userBio.setImeOptions(EditorInfo.IME_ACTION_DONE);

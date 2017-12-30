@@ -17,6 +17,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -54,8 +56,13 @@ public class ProfileActivity extends AppCompatActivity {
         currentState = "notFriends";
 
         usersReference = FirebaseDatabase.getInstance().getReference().child("Users");
+        usersReference.keepSynced(true);
+
         friendRequestsReference = FirebaseDatabase.getInstance().getReference().child("Friend_Requests");
+        friendRequestsReference.keepSynced(true);
+
         friendsReference = FirebaseDatabase.getInstance().getReference().child("Friends");
+        friendsReference.keepSynced(true);
 
         sendFriendRequestButton = (Button) findViewById(R.id.send_friend_request_button);
         declineFriendRequestButton = (Button) findViewById(R.id.decline_friend_request_button);
@@ -80,14 +87,28 @@ public class ProfileActivity extends AppCompatActivity {
         usersReference.child(receiverUserId)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
+                    public void onDataChange(final DataSnapshot dataSnapshot) {
                         userDisplayName.setText(dataSnapshot.child("userDisplayName").getValue().toString());
                         userBio.setText(dataSnapshot.child("userProfileBio").getValue().toString());
 
                         Picasso.with(getBaseContext())
                                 .load(dataSnapshot.child("userProfileImage").getValue().toString())
+                                .networkPolicy(NetworkPolicy.OFFLINE)
                                 .placeholder(R.drawable.default_profile)
-                                .into(profilePicture);
+                                .into(profilePicture, new Callback() {
+                                    @Override
+                                    public void onSuccess() {
+
+                                    }
+
+                                    @Override
+                                    public void onError() {
+                                        Picasso.with(getBaseContext())
+                                                .load(dataSnapshot.child("userProfileImage").getValue().toString())
+                                                .placeholder(R.drawable.default_profile)
+                                                .into(profilePicture);
+                                    }
+                                });
 
                         getSupportActionBar().setTitle(dataSnapshot.child("userDisplayName").getValue().toString());
 

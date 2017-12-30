@@ -2,8 +2,6 @@ package com.androidproject.chatapp;
 
 import android.content.Context;
 import android.content.Intent;
-import android.provider.ContactsContract;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,6 +14,8 @@ import com.androidproject.chatapp.Model.AllUsers;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -43,6 +43,7 @@ public class AllUsersActivity extends AppCompatActivity {
         allUsersList.setLayoutManager(new LinearLayoutManager(this));
 
         databaseReference = FirebaseDatabase.getInstance().getReference().child("Users");
+        databaseReference.keepSynced(true);
     }
 
     @Override
@@ -92,13 +93,27 @@ public class AllUsersActivity extends AppCompatActivity {
             userBio.setText(userProfileBio);
         }
 
-        private void setUserThumbnail(Context context, String userThumbnail) {
-            CircleImageView userThumbnailImage = (CircleImageView) view.findViewById(R.id.all_users_profile_picture);
+        private void setUserThumbnail(final Context context, final String userThumbnail) {
+            final CircleImageView userThumbnailImage = (CircleImageView) view.findViewById(R.id.all_users_profile_picture);
 
             Picasso.with(context)
                     .load(userThumbnail)
+                    .networkPolicy(NetworkPolicy.OFFLINE)
                     .placeholder(R.drawable.default_profile)
-                    .into(userThumbnailImage);
+                    .into(userThumbnailImage, new Callback() {
+                        @Override
+                        public void onSuccess() {
+
+                        }
+
+                        @Override
+                        public void onError() {
+                            Picasso.with(context)
+                                    .load(userThumbnail)
+                                    .placeholder(R.drawable.default_profile)
+                                    .into(userThumbnailImage);
+                        }
+                    });
         }
     }
 }
