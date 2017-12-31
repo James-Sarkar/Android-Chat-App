@@ -98,7 +98,6 @@ public class UserBioActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             Toast.makeText(getBaseContext(), "Your bio has been updated", Toast.LENGTH_LONG).show();
                             Intent intent = new Intent(UserBioActivity.this, SettingsActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                             finish();
                         } else {

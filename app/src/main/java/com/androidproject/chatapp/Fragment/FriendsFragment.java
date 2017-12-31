@@ -85,8 +85,8 @@ public class FriendsFragment extends Fragment {
                 usersReference.child(userIdList).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        FriendsViewHolder.setUserDisplayName(dataSnapshot.child("userDisplayName").getValue().toString());
-                        FriendsViewHolder.setUserThumbnail(getContext(), dataSnapshot.child("userThumbnail").getValue().toString());
+                        viewHolder.setUserDisplayName(dataSnapshot.child("userDisplayName").getValue().toString());
+                        viewHolder.setUserThumbnail(getContext(), dataSnapshot.child("userThumbnail").getValue().toString());
                     }
 
                     @Override
@@ -102,7 +102,7 @@ public class FriendsFragment extends Fragment {
 
     public static class FriendsViewHolder extends RecyclerView.ViewHolder {
 
-        static View view;
+        View view;
 
         public FriendsViewHolder(View itemView) {
             super(itemView);
@@ -115,12 +115,12 @@ public class FriendsFragment extends Fragment {
             sinceFriendsDate.setText(date);
         }
 
-        public static void setUserDisplayName(String userDisplayName) {
+        public void setUserDisplayName(String userDisplayName) {
             TextView usename = (TextView) view.findViewById(R.id.all_users_display_names);
             usename.setText(userDisplayName);
         }
 
-        public static void setUserThumbnail(final Context context, final String userThumbnail) {
+        public void setUserThumbnail(final Context context, final String userThumbnail) {
             final CircleImageView userThumbnailImage = (CircleImageView) view.findViewById(R.id.all_users_profile_picture);
 
             Picasso.with(context)
