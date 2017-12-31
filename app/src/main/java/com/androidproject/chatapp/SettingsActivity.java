@@ -53,7 +53,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     private Button changeUserPictureButton, changeUserBioButton;
 
-    private DatabaseReference databaseReference;
+    private DatabaseReference currentUserReference;
 
     private FirebaseAuth mAuth;
 
@@ -86,10 +86,10 @@ public class SettingsActivity extends AppCompatActivity {
 
         thumbnailImagesReference = FirebaseStorage.getInstance().getReference().child("thumbnailImages");
 
-        databaseReference = FirebaseDatabase.getInstance().getReference()
+        currentUserReference = FirebaseDatabase.getInstance().getReference()
                 .child("Users")
                 .child(mAuth.getCurrentUser().getUid());
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        currentUserReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(final DataSnapshot dataSnapshot) {
                 settingsUserDisplayName.setText(dataSnapshot.child("userDisplayName").getValue().toString());
@@ -121,7 +121,7 @@ public class SettingsActivity extends AppCompatActivity {
 
             }
         });
-        databaseReference.keepSynced(true);
+        currentUserReference.keepSynced(true);
 
         changeUserPictureButton = (Button) findViewById(R.id.change_picture_button);
         changeUserPictureButton.setOnClickListener(new View.OnClickListener() {
@@ -206,7 +206,7 @@ public class SettingsActivity extends AppCompatActivity {
                                         updateUserData.put("userThumbnail", downloadedThumbnailUrl);
 
 
-                                        databaseReference.updateChildren(updateUserData)
+                                        currentUserReference.updateChildren(updateUserData)
                                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                 @Override
                                                 public void onComplete(@NonNull Task<Void> task) {

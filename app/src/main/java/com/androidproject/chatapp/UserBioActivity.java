@@ -28,7 +28,7 @@ public class UserBioActivity extends AppCompatActivity {
 
     private Button saveButton, discardButton;
 
-    private DatabaseReference databaseReference;
+    private DatabaseReference currentUserReference;
 
     private FirebaseAuth mAuth;
 
@@ -48,10 +48,10 @@ public class UserBioActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        databaseReference = FirebaseDatabase.getInstance().getReference()
+        currentUserReference = FirebaseDatabase.getInstance().getReference()
                                 .child("Users")
                                 .child(mAuth.getCurrentUser().getUid());
-        databaseReference.keepSynced(true);
+        currentUserReference.keepSynced(true);
 
         userBio = (EditText) findViewById(R.id.user_bio);
         userBio.setImeOptions(EditorInfo.IME_ACTION_DONE);
@@ -89,7 +89,7 @@ public class UserBioActivity extends AppCompatActivity {
             progressDialog.setMessage("Please wait while we update your bio.");
             progressDialog.show();
 
-            databaseReference.child("userProfileBio").setValue(newBio)
+            currentUserReference.child("userProfileBio").setValue(newBio)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {

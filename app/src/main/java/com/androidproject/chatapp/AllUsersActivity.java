@@ -26,7 +26,7 @@ public class AllUsersActivity extends AppCompatActivity {
 
     private RecyclerView allUsersList;
 
-    private DatabaseReference databaseReference;
+    private DatabaseReference usersReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +42,8 @@ public class AllUsersActivity extends AppCompatActivity {
         allUsersList.setHasFixedSize(true);
         allUsersList.setLayoutManager(new LinearLayoutManager(this));
 
-        databaseReference = FirebaseDatabase.getInstance().getReference().child("Users");
-        databaseReference.keepSynced(true);
+        usersReference = FirebaseDatabase.getInstance().getReference().child("Users");
+        usersReference.keepSynced(true);
     }
 
     @Override
@@ -52,7 +52,7 @@ public class AllUsersActivity extends AppCompatActivity {
 
         FirebaseRecyclerAdapter<AllUsers, AllUsersViewHolder> firebaseRecyclerAdapter
                 = new FirebaseRecyclerAdapter<AllUsers, AllUsersViewHolder>
-                (AllUsers.class, R.layout.all_users_display_layout, AllUsersViewHolder.class, databaseReference) {
+                (AllUsers.class, R.layout.all_users_display_layout, AllUsersViewHolder.class, usersReference) {
             @Override
             protected void populateViewHolder(AllUsersViewHolder viewHolder, AllUsers model, final int position) {
                 viewHolder.setUserDisplayName(model.getUserDisplayName());

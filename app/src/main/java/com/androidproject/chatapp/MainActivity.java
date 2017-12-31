@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
     private FirebaseUser currentUser;
 
-    private DatabaseReference usersReference;
+    private DatabaseReference currentUserReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         if (currentUser != null) {
             String currentUserId = mAuth.getCurrentUser().getUid();
 
-            usersReference = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserId);
+            currentUserReference = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserId);
         }
 
         // Toolbar
@@ -70,16 +70,16 @@ public class MainActivity extends AppCompatActivity {
         if (currentUser == null) {
             logOutUser();
         } else {
-            usersReference.child("online").setValue(true);
+            currentUserReference.child("online").setValue(true);
         }
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onDestroy() {
+        super.onDestroy();
 
         if (currentUser != null) {
-            usersReference.child("online").setValue(false);
+            currentUserReference.child("online").setValue(false);
         }
     }
 
@@ -97,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
         super.onOptionsItemSelected(item);
 
         if (item.getItemId() == R.id.log_out_button_main) {
+            currentUserReference.child("online").setValue(false);
             mAuth.signOut();
 
             logOutUser();
@@ -112,8 +113,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void logOutUser() {
-        usersReference.child("online").setValue(false);
-
         // Redirect user to the start page
         Intent intent = new Intent(MainActivity.this, StartActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

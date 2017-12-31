@@ -1,7 +1,10 @@
 package com.androidproject.chatapp.Fragment;
 
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,7 +15,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.androidproject.chatapp.ConversationsActivity;
 import com.androidproject.chatapp.Model.Friends;
+import com.androidproject.chatapp.ProfileActivity;
 import com.androidproject.chatapp.R;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
@@ -81,17 +86,45 @@ public class FriendsFragment extends Fragment {
             protected void populateViewHolder(final FriendsViewHolder viewHolder, Friends model, int position) {
                 viewHolder.setDate(model.getDate());
 
-                String userIdList = getRef(position).getKey();
+                final String userIdList = getRef(position).getKey();
 
                 usersReference.child(userIdList).addValueEventListener(new ValueEventListener() {
                     @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
+                    public void onDataChange(final DataSnapshot dataSnapshot) {
                         if (dataSnapshot.hasChild("online")) {
                             viewHolder.setUserOnline((Boolean) dataSnapshot.child("online").getValue());
                         }
 
                         viewHolder.setUserDisplayName(dataSnapshot.child("userDisplayName").getValue().toString());
                         viewHolder.setUserThumbnail(getContext(), dataSnapshot.child("userThumbnail").getValue().toString());
+                        viewHolder.view.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                CharSequence[] options = new CharSequence[] {
+                                        dataSnapshot.child("userDisplayName").getValue().toString() + "'s profile",
+                                        "Send a message"
+                                };
+
+                                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                builder.setTitle("Select an option");
+                                builder.setItems(options, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        if (which == 0) {
+                                            Intent intent = new Intent(getContext(), ProfileActivity.class);
+                                            intent.putExtra("userId", userIdList);
+                                            startActivity(intent);
+                                        } else if (which == 1) {
+                                            Intent intent = new Intent(getContext(), ConversationsActivity.class);
+                                            intent.putExtra("userId", userIdList);
+                                            intent.putExtra("userDisplayName", dataSnapshot.child("userDisplayName").getValue().toString());
+                                            startActivity(intent);
+                                        }
+                                    }
+                                });
+                                builder.show();
+                            }
+                        });
                     }
 
                     @Override
