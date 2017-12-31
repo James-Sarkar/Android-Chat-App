@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.androidproject.chatapp.Model.Friends;
@@ -85,6 +86,10 @@ public class FriendsFragment extends Fragment {
                 usersReference.child(userIdList).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.hasChild("online")) {
+                            viewHolder.setUserOnline((Boolean) dataSnapshot.child("online").getValue());
+                        }
+
                         viewHolder.setUserDisplayName(dataSnapshot.child("userDisplayName").getValue().toString());
                         viewHolder.setUserThumbnail(getContext(), dataSnapshot.child("userThumbnail").getValue().toString());
                     }
@@ -141,6 +146,16 @@ public class FriendsFragment extends Fragment {
                                     .into(userThumbnailImage);
                         }
                     });
+        }
+
+        public void setUserOnline(Boolean online) {
+            ImageView onlineStatusView = (ImageView) view.findViewById(R.id.online_status);
+
+            if (online) {
+                onlineStatusView.setVisibility(View.VISIBLE);
+            } else {
+                onlineStatusView.setVisibility(View.INVISIBLE);
+            }
         }
     }
 }

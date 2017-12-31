@@ -13,6 +13,7 @@ import com.androidproject.chatapp.Adapter.TabsPagerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,12 +27,24 @@ public class MainActivity extends AppCompatActivity {
 
     private TabsPagerAdapter tabsPagerAdapter;
 
+    private FirebaseUser currentUser;
+
+    private DatabaseReference usersReference;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         mAuth = FirebaseAuth.getInstance();
+
+        currentUser = mAuth.getCurrentUser();
+
+        if (currentUser != null) {
+            String currentUserId = mAuth.getCurrentUser().getUid();
+
+            usersReference = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserId);
+        }
 
         // Toolbar
         mToolbar = (Toolbar) findViewById(R.id.main_toolbar);
@@ -51,11 +64,22 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+        currentUser = mAuth.getCurrentUser();
 
         // If user is not logged in
         if (currentUser == null) {
             logOutUser();
+        } else {
+            usersReference.child("online").setValue(true);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        if (currentUser != null) {
+            usersReference.child("online").setValue(false);
         }
     }
 
@@ -88,6 +112,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void logOutUser() {
+        usersReference.child("online").setValue(false);
+
         // Redirect user to the start page
         Intent intent = new Intent(MainActivity.this, StartActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
