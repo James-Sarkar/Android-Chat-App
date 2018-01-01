@@ -1,9 +1,7 @@
 package com.androidproject.chatapp.Fragment;
 
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -53,7 +51,6 @@ public class ConversationsFragment extends Fragment {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -66,8 +63,10 @@ public class ConversationsFragment extends Fragment {
         currentUserId = mAuth.getCurrentUser().getUid();
 
         usersReference = FirebaseDatabase.getInstance().getReference().child("Users");
+        usersReference.keepSynced(true);
 
         friendsReference = FirebaseDatabase.getInstance().getReference().child("Friends").child(currentUserId);
+        friendsReference.keepSynced(true);
 
         conversationsList.setHasFixedSize(true);
 
@@ -89,9 +88,9 @@ public class ConversationsFragment extends Fragment {
                 (Conversation.class, R.layout.all_users_display_layout, ListConversationsViewHolder.class, friendsReference) {
             @Override
             protected void populateViewHolder(final ListConversationsViewHolder viewHolder, Conversation model, int position) {
-                final String userIdList = getRef(position).getKey();
+                final String userId = getRef(position).getKey();
 
-                usersReference.child(userIdList).addValueEventListener(new ValueEventListener() {
+                usersReference.child(userId).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(final DataSnapshot dataSnapshot) {
                         if (dataSnapshot.hasChild("online")) {
@@ -110,16 +109,16 @@ public class ConversationsFragment extends Fragment {
                             public void onClick(View v) {
                                 if (dataSnapshot.child("online").exists()) {
                                     Intent intent = new Intent(getContext(), ConversationsActivity.class);
-                                    intent.putExtra("userId", userIdList);
+                                    intent.putExtra("userId", userId);
                                     intent.putExtra("userDisplayName", dataSnapshot.child("userDisplayName").getValue().toString());
                                     startActivity(intent);
                                 } else {
-                                    usersReference.child(userIdList).child("online").setValue(ServerValue.TIMESTAMP)
+                                    usersReference.child(userId).child("online").setValue(ServerValue.TIMESTAMP)
                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
                                                 public void onSuccess(Void aVoid) {
                                                     Intent intent = new Intent(getContext(), ConversationsActivity.class);
-                                                    intent.putExtra("userId", userIdList);
+                                                    intent.putExtra("userId", userId);
                                                     intent.putExtra("userDisplayName", dataSnapshot.child("userDisplayName").getValue().toString());
                                                     startActivity(intent);
                                                 }

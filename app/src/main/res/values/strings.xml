@@ -17,5 +17,7 @@
     <string name="discard">Discard</string>
     <string name="send_friend_request">Send Friend Request</string>
     <string name="decline_friend_request">Decline Friend Request</string>
+    <string name="accept">Accept</string>
+    <string name="decline">Decline</string>
 
 </resources>

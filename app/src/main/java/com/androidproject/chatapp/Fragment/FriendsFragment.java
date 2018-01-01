@@ -54,7 +54,6 @@ public class FriendsFragment extends Fragment {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -73,7 +72,13 @@ public class FriendsFragment extends Fragment {
         usersReference = FirebaseDatabase.getInstance().getReference().child("Users");
         usersReference.keepSynced(true);
 
-        friendsList.setLayoutManager(new LinearLayoutManager(getContext()));
+        friendsList.setHasFixedSize(true);
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        linearLayoutManager.setReverseLayout(true);
+        linearLayoutManager.setStackFromEnd(true);
+
+        friendsList.setLayoutManager(linearLayoutManager);
 
         return mainView;
     }
@@ -89,9 +94,9 @@ public class FriendsFragment extends Fragment {
             protected void populateViewHolder(final ListFriendsViewHolder viewHolder, Friend model, int position) {
                 viewHolder.setDate(model.getDate());
 
-                final String userIdList = getRef(position).getKey();
+                final String userId = getRef(position).getKey();
 
-                usersReference.child(userIdList).addValueEventListener(new ValueEventListener() {
+                usersReference.child(userId).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(final DataSnapshot dataSnapshot) {
                         if (dataSnapshot.hasChild("online")) {
@@ -117,21 +122,21 @@ public class FriendsFragment extends Fragment {
                                     public void onClick(DialogInterface dialog, int which) {
                                         if (which == 0) {
                                             Intent intent = new Intent(getContext(), ProfileActivity.class);
-                                            intent.putExtra("userId", userIdList);
+                                            intent.putExtra("userId", userId);
                                             startActivity(intent);
                                         } else if (which == 1) {
                                             if (dataSnapshot.child("online").exists()) {
                                                 Intent intent = new Intent(getContext(), ConversationsActivity.class);
-                                                intent.putExtra("userId", userIdList);
+                                                intent.putExtra("userId", userId);
                                                 intent.putExtra("userDisplayName", dataSnapshot.child("userDisplayName").getValue().toString());
                                                 startActivity(intent);
                                             } else {
-                                                usersReference.child(userIdList).child("online").setValue(ServerValue.TIMESTAMP)
+                                                usersReference.child(userId).child("online").setValue(ServerValue.TIMESTAMP)
                                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                             @Override
                                                             public void onSuccess(Void aVoid) {
                                                                 Intent intent = new Intent(getContext(), ConversationsActivity.class);
-                                                                intent.putExtra("userId", userIdList);
+                                                                intent.putExtra("userId", userId);
                                                                 intent.putExtra("userDisplayName", dataSnapshot.child("userDisplayName").getValue().toString());
                                                                 startActivity(intent);
                                                             }
@@ -172,8 +177,8 @@ public class FriendsFragment extends Fragment {
         }
 
         public void setUserDisplayName(String userDisplayName) {
-            TextView usename = (TextView) view.findViewById(R.id.all_users_display_names);
-            usename.setText(userDisplayName);
+            TextView username = (TextView) view.findViewById(R.id.all_users_display_names);
+            username.setText(userDisplayName);
         }
 
         public void setUserThumbnail(final Context context, final String userThumbnail) {
