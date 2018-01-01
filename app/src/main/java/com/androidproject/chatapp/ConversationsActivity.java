@@ -228,6 +228,7 @@ public class ConversationsActivity extends AppCompatActivity {
             messageBody.put("seen", false);
             messageBody.put("type", "text");
             messageBody.put("time", ServerValue.TIMESTAMP);
+            messageBody.put("from", messageSenderUserId);
 
             Map messageBodyDetails = new HashMap();
             messageBodyDetails.put(messageSenderReference + "/" + messagePushId, messageBody);

@@ -82,10 +82,11 @@ public class FriendsFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        FirebaseRecyclerAdapter<Friend, FriendsViewHolder> firebaseRecyclerAdapter
-                 = new FirebaseRecyclerAdapter<Friend, FriendsViewHolder>(Friend.class, R.layout.all_users_display_layout, FriendsViewHolder.class, friendsReference) {
+        FirebaseRecyclerAdapter<Friend, ListFriendsViewHolder> firebaseRecyclerAdapter
+                 = new FirebaseRecyclerAdapter<Friend, ListFriendsViewHolder>
+                (Friend.class, R.layout.all_users_display_layout, ListFriendsViewHolder.class, friendsReference) {
             @Override
-            protected void populateViewHolder(final FriendsViewHolder viewHolder, Friend model, int position) {
+            protected void populateViewHolder(final ListFriendsViewHolder viewHolder, Friend model, int position) {
                 viewHolder.setDate(model.getDate());
 
                 final String userIdList = getRef(position).getKey();
@@ -155,11 +156,11 @@ public class FriendsFragment extends Fragment {
         friendsList.setAdapter(firebaseRecyclerAdapter);
     }
 
-    public static class FriendsViewHolder extends RecyclerView.ViewHolder {
+    public static class ListFriendsViewHolder extends RecyclerView.ViewHolder {
 
         View view;
 
-        public FriendsViewHolder(View itemView) {
+        public ListFriendsViewHolder(View itemView) {
             super(itemView);
 
             view = itemView;
@@ -167,7 +168,7 @@ public class FriendsFragment extends Fragment {
 
         public void setDate(String date) {
             TextView sinceFriendsDate = (TextView) view.findViewById(R.id.all_users_bios);
-            sinceFriendsDate.setText(date);
+            sinceFriendsDate.setText("Friends since \n" + date);
         }
 
         public void setUserDisplayName(String userDisplayName) {
