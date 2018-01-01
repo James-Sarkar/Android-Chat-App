@@ -51,7 +51,7 @@ public class ConversationsActivity extends AppCompatActivity {
 
     private DatabaseReference rootReference;
 
-    private ImageButton sendMessageButton, selectAnImageButton;
+    private ImageButton sendMessageButton, clearMessageButton;
 
     private EditText inputMessageBox;
 
@@ -122,7 +122,18 @@ public class ConversationsActivity extends AppCompatActivity {
 
         fetchMessages();
 
-        selectAnImageButton = (ImageButton) findViewById(R.id.select_an_image_button);
+        clearMessageButton = (ImageButton) findViewById(R.id.clear_message_button);
+        clearMessageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Clear the text box after sending a message
+                inputMessageBox.getText().clear();
+
+                // Hide soft keyboard after sending a message
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(inputMessageBox.getWindowToken(), 0);
+            }
+        });
 
         inputMessageBox = (EditText) findViewById(R.id.message_box);
 

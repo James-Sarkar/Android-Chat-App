@@ -34,11 +34,11 @@
         android:padding="10dp">
 
         <ImageButton
-            android:id="@+id/select_an_image_button"
+            android:id="@+id/clear_message_button"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:padding="5dp"
-            android:src="@drawable/ic_add_a_photo" />
+            android:src="@drawable/ic_clear_message" />
 
         <EditText
             android:id="@+id/message_box"
