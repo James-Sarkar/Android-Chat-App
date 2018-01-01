@@ -16,7 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.androidproject.chatapp.ConversationsActivity;
-import com.androidproject.chatapp.Model.Friends;
+import com.androidproject.chatapp.Model.Friend;
 import com.androidproject.chatapp.ProfileActivity;
 import com.androidproject.chatapp.R;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -82,10 +82,10 @@ public class FriendsFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        FirebaseRecyclerAdapter<Friends, FriendsViewHolder> firebaseRecyclerAdapter
-                 = new FirebaseRecyclerAdapter<Friends, FriendsViewHolder>(Friends.class, R.layout.all_users_display_layout, FriendsViewHolder.class, friendsReference) {
+        FirebaseRecyclerAdapter<Friend, FriendsViewHolder> firebaseRecyclerAdapter
+                 = new FirebaseRecyclerAdapter<Friend, FriendsViewHolder>(Friend.class, R.layout.all_users_display_layout, FriendsViewHolder.class, friendsReference) {
             @Override
-            protected void populateViewHolder(final FriendsViewHolder viewHolder, Friends model, int position) {
+            protected void populateViewHolder(final FriendsViewHolder viewHolder, Friend model, int position) {
                 viewHolder.setDate(model.getDate());
 
                 final String userIdList = getRef(position).getKey();

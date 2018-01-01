@@ -40,7 +40,7 @@
             android:name=".AllUsersActivity"
             android:parentActivityName=".MainActivity" />
         <activity android:name=".ProfileActivity" />
-        <activity android:name=".ConversationsActivity" />
+        <activity android:name=".ConversationsActivity" android:parentActivityName=".MainActivity"/>
     </application>
 
 </manifest>

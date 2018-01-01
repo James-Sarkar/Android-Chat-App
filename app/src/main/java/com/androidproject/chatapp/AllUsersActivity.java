@@ -10,7 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
-import com.androidproject.chatapp.Model.AllUsers;
+import com.androidproject.chatapp.Model.User;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -50,11 +50,11 @@ public class AllUsersActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        FirebaseRecyclerAdapter<AllUsers, AllUsersViewHolder> firebaseRecyclerAdapter
-                = new FirebaseRecyclerAdapter<AllUsers, AllUsersViewHolder>
-                (AllUsers.class, R.layout.all_users_display_layout, AllUsersViewHolder.class, usersReference) {
+        FirebaseRecyclerAdapter<User, AllUsersViewHolder> firebaseRecyclerAdapter
+                = new FirebaseRecyclerAdapter<User, AllUsersViewHolder>
+                (User.class, R.layout.all_users_display_layout, AllUsersViewHolder.class, usersReference) {
             @Override
-            protected void populateViewHolder(AllUsersViewHolder viewHolder, AllUsers model, final int position) {
+            protected void populateViewHolder(AllUsersViewHolder viewHolder, User model, final int position) {
                 viewHolder.setUserDisplayName(model.getUserDisplayName());
                 viewHolder.setUserProfileBio(model.getUserProfileBio());
                 viewHolder.setUserThumbnail(getApplicationContext(), model.getUserThumbnail());

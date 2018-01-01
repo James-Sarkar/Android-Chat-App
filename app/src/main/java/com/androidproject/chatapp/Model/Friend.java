@@ -4,15 +4,15 @@ package com.androidproject.chatapp.Model;
  * Created by James Sarkar.
  */
 
-public class Friends {
+public class Friend {
 
     private String date;
 
-    public Friends() {
+    public Friend() {
 
     }
 
-    public Friends(String date) {
+    public Friend(String date) {
         this.date = date;
     }
 

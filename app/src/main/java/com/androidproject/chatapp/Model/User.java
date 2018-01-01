@@ -4,15 +4,15 @@ package com.androidproject.chatapp.Model;
  * Created by James Sarkar.
  */
 
-public class AllUsers {
+public class User {
 
     private String userDisplayName, userProfileImage, userProfileBio, userThumbnail;
 
-    public AllUsers() {
+    public User() {
 
     }
 
-    public AllUsers(String userDisplayName, String userProfileImage, String userProfileBio, String userThumbnail) {
+    public User(String userDisplayName, String userProfileImage, String userProfileBio, String userThumbnail) {
         this.userDisplayName = userDisplayName;
         this.userProfileImage = userProfileImage;
         this.userProfileBio = userProfileBio;
