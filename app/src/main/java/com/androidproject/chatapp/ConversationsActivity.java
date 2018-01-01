@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -81,6 +82,7 @@ public class ConversationsActivity extends AppCompatActivity {
         messageHistory = (RecyclerView) findViewById(R.id.message_history);
 
         linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setStackFromEnd(true);
 
         messageHistory.setHasFixedSize(true);
         messageHistory.setLayoutManager(linearLayoutManager);
@@ -240,7 +242,13 @@ public class ConversationsActivity extends AppCompatActivity {
                     if (databaseError != null) {
                         Log.d("DEBUG", databaseError.getMessage().toString());
                     }
-                    inputMessageBox.setText("");
+
+                    // Clear the text box after sending a message
+                    inputMessageBox.getText().clear();
+
+                    // Hide soft keyboard after sending a message
+                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(inputMessageBox.getWindowToken(), 0);
                 }
             });
         }
