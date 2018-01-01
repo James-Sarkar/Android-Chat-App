@@ -7,7 +7,7 @@ import android.content.Context;
  * Created by James Sarkar.
  */
 
-public class LastSeenTime extends Application {
+public class TimeAgoConverter extends Application {
     /*
      * Copyright 2012 Google Inc.
      *
@@ -30,7 +30,7 @@ public class LastSeenTime extends Application {
     private static final int DAY_MILLIS = 24 * HOUR_MILLIS;
 
 
-    public static String getTimeAgo(long time, Context ctx) {
+    public static String getTimeAgo(long time) {
         if (time < 1000000000000L) {
             // if timestamp given in seconds, convert to millis
             time *= 1000;

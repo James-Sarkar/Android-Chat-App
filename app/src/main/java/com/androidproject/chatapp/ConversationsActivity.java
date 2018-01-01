@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -17,7 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
 
 import com.androidproject.chatapp.Adapter.MessageAdapter;
-import com.androidproject.chatapp.Common.LastSeenTime;
+import com.androidproject.chatapp.Common.TimeAgoConverter;
 import com.androidproject.chatapp.Model.Message;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -71,6 +72,8 @@ public class ConversationsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conversations);
 
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+
         mAuth = FirebaseAuth.getInstance();
 
         messageSenderUserId = mAuth.getCurrentUser().getUid();
@@ -82,7 +85,6 @@ public class ConversationsActivity extends AppCompatActivity {
         messageHistory = (RecyclerView) findViewById(R.id.message_history);
 
         linearLayoutManager = new LinearLayoutManager(this);
-        linearLayoutManager.setStackFromEnd(true);
 
         messageHistory.setHasFixedSize(true);
         messageHistory.setLayoutManager(linearLayoutManager);
@@ -159,13 +161,9 @@ public class ConversationsActivity extends AppCompatActivity {
                 if (online.equals("true")) {
                     userLastSeen.setText("Online");
                 } else {
-                    LastSeenTime lastSeenTime = new LastSeenTime();
-
                     long lastSeen = Long.parseLong(online);
 
-                    String lastSeenDisplayTime = lastSeenTime.getTimeAgo(lastSeen, getApplicationContext()).toString();
-
-                    userLastSeen.setText(lastSeenDisplayTime);
+                    userLastSeen.setText(TimeAgoConverter.getTimeAgo(lastSeen).toString());
                 }
             }
 
@@ -186,6 +184,8 @@ public class ConversationsActivity extends AppCompatActivity {
                         MESSAGES.add(message);
 
                         messageAdapter.notifyDataSetChanged();
+
+                        messageHistory.scrollToPosition(MESSAGES.size() - 1);
                     }
 
                     @Override

@@ -11,21 +11,14 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.androidproject.chatapp.Common.TimeAgoConverter;
 import com.androidproject.chatapp.Model.Message;
 import com.androidproject.chatapp.R;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.NetworkPolicy;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by James Sarkar.
@@ -74,43 +67,20 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
 
             holder.singleMessageContainer.setGravity(Gravity.RIGHT);
 
-            holder.profilePicture.setVisibility(View.INVISIBLE);
+            holder.messageTime.setText(TimeAgoConverter.getTimeAgo(message.getTime()).toString());
+
+            holder.messageTime.setGravity(Gravity.RIGHT);
         } else {
             holder.messageText.setBackgroundResource(R.drawable.message_text_background_1);
             holder.messageText.setTextColor(Color.WHITE);
             holder.messageText.setPadding((int) (30 * scale + 0.5f), (int) (20 * scale + 0.5f),
                     (int) (20 * scale + 0.5f), (int) (20 * scale + 0.5f));
 
+            holder.messageTime.setText(TimeAgoConverter.getTimeAgo(message.getTime()).toString());
+
             holder.singleMessageContainer.setGravity(Gravity.LEFT);
 
-            userReference.child(fromUserId).addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(final DataSnapshot dataSnapshot) {
-                    Picasso.with(null).load(dataSnapshot.child("userThumbnail").getValue().toString())
-                            .networkPolicy(NetworkPolicy.OFFLINE)
-                            .placeholder(R.drawable.default_profile)
-                            .into(holder.profilePicture, new Callback() {
-                                @Override
-                                public void onSuccess() {
-
-                                }
-
-                                @Override
-                                public void onError() {
-                                    Picasso.with(null)
-                                            .load(dataSnapshot.child("userProfileImage").getValue().toString())
-                                            .placeholder(R.drawable.default_profile)
-                                            .into(holder.profilePicture);
-                                }
-                            });
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-
+            holder.messageTime.setGravity(Gravity.LEFT);
         }
 
         holder.messageText.setText(message.getMessage());
@@ -124,11 +94,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
 
 class MessageViewHolder extends RecyclerView.ViewHolder {
 
-    TextView messageText;
+    TextView messageText, messageTime;
 
     LinearLayout singleMessageContainer;
-
-    CircleImageView profilePicture;
 
     MessageViewHolder(View itemView) {
         super(itemView);
@@ -137,6 +105,6 @@ class MessageViewHolder extends RecyclerView.ViewHolder {
 
         singleMessageContainer = (LinearLayout) itemView.findViewById(R.id.single_message_container);
 
-        profilePicture = (CircleImageView) itemView.findViewById(R.id.messages_profile_picture);
+        messageTime = (TextView) itemView.findViewById(R.id.message_time);
     }
 }
