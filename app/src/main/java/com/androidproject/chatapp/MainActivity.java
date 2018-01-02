@@ -45,20 +45,21 @@ public class MainActivity extends AppCompatActivity {
             String currentUserId = mAuth.getCurrentUser().getUid();
 
             currentUserReference = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserId);
+
+
+            // Toolbar
+            mToolbar = (Toolbar) findViewById(R.id.main_toolbar);
+            setSupportActionBar(mToolbar);
+            getSupportActionBar().setTitle("ChatApp");
+
+            // Tabs
+            viewPager = (ViewPager) findViewById(R.id.main_tabs_pager);
+            tabsPagerAdapter = new TabsPagerAdapter(getSupportFragmentManager());
+            viewPager.setAdapter(tabsPagerAdapter);
+
+            tabLayout = (TabLayout) findViewById(R.id.main_tabs);
+            tabLayout.setupWithViewPager(viewPager);
         }
-
-        // Toolbar
-        mToolbar = (Toolbar) findViewById(R.id.main_toolbar);
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle("ChatApp");
-
-        // Tabs
-        viewPager = (ViewPager) findViewById(R.id.main_tabs_pager);
-        tabsPagerAdapter = new TabsPagerAdapter(getSupportFragmentManager());
-        viewPager.setAdapter(tabsPagerAdapter);
-
-        tabLayout = (TabLayout) findViewById(R.id.main_tabs);
-        tabLayout.setupWithViewPager(viewPager);
     }
 
     @Override

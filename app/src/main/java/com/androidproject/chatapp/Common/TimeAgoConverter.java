@@ -1,7 +1,6 @@
 package com.androidproject.chatapp.Common;
 
 import android.app.Application;
-import android.content.Context;
 
 /**
  * Created by James Sarkar.

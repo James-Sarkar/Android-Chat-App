@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -128,10 +127,6 @@ public class ConversationsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Clear the text box after sending a message
                 inputMessageBox.getText().clear();
-
-                // Hide soft keyboard after sending a message
-                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(inputMessageBox.getWindowToken(), 0);
             }
         });
 
@@ -256,10 +251,6 @@ public class ConversationsActivity extends AppCompatActivity {
 
                     // Clear the text box after sending a message
                     inputMessageBox.getText().clear();
-
-                    // Hide soft keyboard after sending a message
-                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(inputMessageBox.getWindowToken(), 0);
                 }
             });
         }
