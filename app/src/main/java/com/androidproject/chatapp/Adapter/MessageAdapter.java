@@ -60,7 +60,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
         String fromUserId = message.getFrom();
 
         if (messageSenderUserId.equals(fromUserId)) {
-            holder.messageText.setBackgroundResource(R.drawable.message_text_backgorund_2);
+            holder.messageText.setBackgroundResource(R.drawable.message_text_background_2);
             holder.messageText.setTextColor(Color.WHITE);
             holder.messageText.setPadding((int) (20 * scale + 0.5f), (int) (20 * scale + 0.5f),
                     (int) (30 * scale + 0.5f), (int) (20 * scale + 0.5f));
