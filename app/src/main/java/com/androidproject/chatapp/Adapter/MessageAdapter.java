@@ -1,6 +1,5 @@
 package com.androidproject.chatapp.Adapter;
 
-
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;

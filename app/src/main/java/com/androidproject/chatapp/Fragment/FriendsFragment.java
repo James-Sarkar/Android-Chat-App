@@ -1,6 +1,5 @@
 package com.androidproject.chatapp.Fragment;
 
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -34,10 +33,10 @@ import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-
 /**
- * A simple {@link Fragment} subclass.
+ * Created by James Sarkar.
  */
+
 public class FriendsFragment extends Fragment {
 
     private RecyclerView friendsList;
@@ -57,10 +56,9 @@ public class FriendsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        mainView = inflater.inflate(R.layout.fragment_friends, container, false);
 
         mAuth = FirebaseAuth.getInstance();
-
-        mainView = inflater.inflate(R.layout.fragment_friends, container, false);
 
         friendsList = (RecyclerView) mainView.findViewById(R.id.friends_list);
 

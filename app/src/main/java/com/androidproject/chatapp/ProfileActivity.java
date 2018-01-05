@@ -26,6 +26,10 @@ import java.util.Calendar;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+/**
+ * Created by James Sarkar.
+ */
+
 public class ProfileActivity extends AppCompatActivity {
 
     private Toolbar mToolbar;

@@ -20,6 +20,10 @@ import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+/**
+ * Created by James Sarkar.
+ */
+
 public class AllUsersActivity extends AppCompatActivity {
 
     private Toolbar mToolbar;

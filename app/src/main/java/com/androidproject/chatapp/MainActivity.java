@@ -16,6 +16,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 
+/**
+ * Created by James Sarkar.
+ */
+
 public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
@@ -45,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
             String currentUserId = mAuth.getCurrentUser().getUid();
 
             currentUserReference = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserId);
-
 
             // Toolbar
             mToolbar = (Toolbar) findViewById(R.id.main_toolbar);

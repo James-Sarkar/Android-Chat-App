@@ -1,6 +1,5 @@
 package com.androidproject.chatapp.Fragment;
 
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -31,10 +30,10 @@ import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-
 /**
- * A simple {@link Fragment} subclass.
+ * Created by James Sarkar.
  */
+
 public class ConversationsFragment extends Fragment {
 
     private View mainView;

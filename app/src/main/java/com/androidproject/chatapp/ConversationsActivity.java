@@ -38,6 +38,10 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+/**
+ * Created by James Sarkar.
+ */
+
 public class ConversationsActivity extends AppCompatActivity {
 
     private String messageReceiverUserId, messageReceiverUserDisplayName;

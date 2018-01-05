@@ -39,6 +39,10 @@ import java.util.Map;
 import de.hdodenhof.circleimageview.CircleImageView;
 import id.zelory.compressor.Compressor;
 
+/**
+ * Created by James Sarkar.
+ */
+
 public class SettingsActivity extends AppCompatActivity {
 
     private static final int GALLERY_PICK = 1;

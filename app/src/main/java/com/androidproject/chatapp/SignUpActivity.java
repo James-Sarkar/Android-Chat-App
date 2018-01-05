@@ -19,6 +19,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+/**
+ * Created by James Sarkar.
+ */
+
 public class SignUpActivity extends AppCompatActivity {
 
     private EditText mSignUpDisplayName, mSignUpEmail, mSignUpPassword;
