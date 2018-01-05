@@ -1,6 +1,5 @@
 package com.androidproject.chatapp.Fragment;
 
-
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -34,10 +33,10 @@ import java.util.Calendar;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-
 /**
- * A simple {@link Fragment} subclass.
+ * Created by James Sarkar.
  */
+
 public class RequestsFragment extends Fragment {
 
     private RecyclerView friendRequestsList;
